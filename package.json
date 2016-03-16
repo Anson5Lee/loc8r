@@ -1,0 +1,27 @@
+{
+  "name": "loc8r",
+  "version": "0.0.0",
+  "description": "Simple locate and rate app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlympusBrons/loc8r.git"
+  },
+  "keywords": [
+    "loc8r",
+    "locator",
+    "rate"
+  ],
+  "author": "Brandon Mitchell <brandon@boredprogrammer.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OlympusBrons/loc8r/issues"
+  },
+  "homepage": "https://github.com/OlympusBrons/loc8r#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
