@@ -7,3 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+var homepageController = function (req, res) {
+	res.render('index', { title: 'Express' });
+};
