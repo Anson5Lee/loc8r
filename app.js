@@ -8,9 +8,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var gcloud = require('gcloud'){
-	projectId: 'jam-shack';
-}
+// var gcloud = require('gcloud'){
+// 	projectId: 'jam-shack';
+// }
 
 var routes = require('./app_server/routes/index');
 var users = require('./app_server/routes/users');
