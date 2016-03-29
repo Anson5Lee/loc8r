@@ -6,7 +6,7 @@ html
     link(rel='stylesheet', href='/bootstrap/css/amelia.bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    .navbar.navbar-default.navbar-fixed-top
+   .navbar.navbar-default.navbar-fixed-top
       .container
         .navbar-header
           a.navbar-brand(href='/') Loc8r
@@ -18,7 +18,8 @@ html
           ul.nav.navbar-nav
             li
               a(href='/about/') About
-    .container.text-center
+
+    .container
       block content
 
       footer
