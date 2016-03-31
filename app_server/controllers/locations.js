@@ -25,7 +25,7 @@ module.exports.homelist = function(req, res) {
 			rating: 4,
 			facilities: ['Hot Drinks', 'Food', 'Premium Wifi'],
 			distance: '220m'
-		}, {
+		},{
 			name: 'Burger Queen',
 			address: '125 High Street, Reading, RG6 1PS',
 			rating: 2,
@@ -41,5 +41,5 @@ module.exports.locationInfo = function(req, res) {
 };
 // GET Add Review page
 module.exports.addReview = function(req, res) {
-	res.render('location-review-formm', { title: 'Add Review' });
+	res.render('location-review-form', { title: 'Add Review' });
 };
