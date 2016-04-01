@@ -58,19 +58,17 @@ module.exports.locationInfo = function(req, res) {
 			days: 'Sunday',
 			closed: true
 		}],
-
-		locationMap: 'http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2',
 		addReviewURL: '/location/review/new',
 		reviews: [{
 			author: 'Simon Holmes',
 			rating: 5,	
-			timestamp: '16 July 2013',
+			createdOn: '16 July 2013',
 			content: "What a great place. I can't say "
 				   + "enough good things about it."
 		},{
 			author: "Charlie Chaplin",
 			rating: 3,	
-			timestamp: "16 June 2013",
+			createdOn: "16 June 2013",
 			content: 
 				"it was okay.. coffee wasn't great, " 
 			  + "but the wifi was fast."
