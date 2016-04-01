@@ -40,29 +40,36 @@ module.exports.homelist = function(req, res) {
 module.exports.locationInfo = function(req, res) {
 	res.render('location-info', { 
 		title: 'Starcups Info',
-		rating: 3,
 		address: "125 High Street, Reading, RG6 1PS",
-		openingHours: [
-			"Sunday	6AM–9PM",
-			"Monday	5:30AM–9PM",
-			"Tuesday 5:30AM–9PM",
-			"Wednesday 5:30AM–9PM",
-			"Thursday 5:30AM–9PM",
-			"Friday	5:30AM–9PM",
-			"Saturday 6AM–9PM"
-		],
+		rating: 3,
 		facilities: ['Hot Drinks', 'Food', 'Premium Wifi'],
+		coords: {lat: 51.455041, lng: -0.9690884},
+		openingTimes: [{
+			days: 'Monday - Friday',
+			opening: '7:00am',
+			closing: '7:00pm',
+			closed: false
+		},{
+			days: 'Saturday',
+			opening: '8:00am',
+			closing: '5:00pm',
+			closed: false
+		},{
+			days: 'Sunday',
+			closed: true
+		}],
+
 		locationMap: 'http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2',
 		addReviewURL: '/location/review/new',
-		custReviews: [{
-			rating: 5,
-			author: "Simon Holmes",
-			timestamp: "16 July 2013",
+		reviews: [{
+			author: 'Simon Holmes',
+			rating: 5,	
+			timestamp: '16 July 2013',
 			content: "What a great place. I can't say "
 				   + "enough good things about it."
 		},{
-			rating: 3,
 			author: "Charlie Chaplin",
+			rating: 3,	
 			timestamp: "16 June 2013",
 			content: 
 				"it was okay.. coffee wasn't great, " 
