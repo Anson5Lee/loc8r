@@ -1,5 +1,5 @@
 extends layout
-
+include _includes/sharedHTMLfunctions
 block content
   .row.page-header
     .col-lg-12
@@ -15,11 +15,7 @@ block content
           label.col-xs-12.col-sm-2.control-label(for="rating") Rating
           .col-xs-12.col-sm-2
             select#rating.form-control.input-sm(name="rating")
-              option 5
-              option 4
-              option 3
-              option 2
-              option 1
+              +numOptions(5)
         .form-group
           label.col-sm-2.control-label(for="review") Review
           .col-sm-10

@@ -3,3 +3,7 @@ mixin outputRating(rating)
     span.glyphicon.glyphicon-star
   - for (var i = rating; i < 5; i++)
     span.glyphicon.glyphicon-star-empty
+
+mixin numOptions(amount)
+  - for (var i = amount; i > 0; i--)
+    option= i

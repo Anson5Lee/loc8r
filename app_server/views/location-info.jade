@@ -11,6 +11,7 @@ block content
           p.rating
             +outputRating(rating)
           p= address
+
           .panel.panel-primary
             .panel-heading
               h2.panel-title Opening hours
@@ -20,8 +21,7 @@ block content
                   | &nbsp;
                   span.glyphicon.glyphicon-ok
                 | &nbsp;
-              br
-              br
+
               each line in openingHours
                 p#hours= line
         .col-xs-12.col-sm-6.location-map
@@ -36,6 +36,7 @@ block content
             .panel-heading
               a.btn.btn-default.pull-right(href=addReviewURL) Add review
               h2.panel-title Customer reviews
+
             .panel-body.review-container
               each review in custReviews
                 .row
