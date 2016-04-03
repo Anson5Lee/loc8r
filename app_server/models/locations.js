@@ -9,7 +9,7 @@ var reviewSchema = new mongoose.Schema({
 	author: {type: String, required: true},
 	rating: {type: Number, required: true, min: 0, max: 5},
 	content: String,
-	createdOn: {type: Date, "default": Date.now}
+	timestamp: {type: Date, "default": Date.now}
 
 });
 var locationSchema = new mongoose.Schema({
