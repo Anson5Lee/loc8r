@@ -1,9 +1,14 @@
 var mongoose = require( 'mongoose' );
 var gracefulShutdown;
-var dbURI = 'mongodb://localhost/Loc8r';
 
+var dbURI = 'mongodb://localhost/Loc8r';
+if (process.env.NODE_ENV === 'production') {
+	dbURI = process.env.MONGOLAB_URI;
+}
 mongoose.connect(dbURI);
+
 mongoose.connection.on('connected', function () {
+	console.log('NODE_ENV: ' + process.env.NODE_ENV);
 	console.log('Mongoose connected to ' + dbURI);
 });
 mongoose.connection.on('error', function (err) {
