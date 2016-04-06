@@ -8,7 +8,6 @@ var sendJsonResponse = function (res, status, content) {
 
 module.exports.locationsListByDistance = function (req, res) {
 	sendJsonResponse(res, 200, {"status" : "success"});
-	console.log(req);
 };
 module.exports.locationsCreate = function (req, res) {
 };
@@ -30,7 +29,7 @@ module.exports.locationsReadOne = function (req, res) {
 				}
 				sendJsonResponse(res, 200, location);
 				console.log("All seemingly went well!");
-			});	
+			});
 	} else {
 		sendJsonResponse(res, 404, {
 			"message" : "No locationid in request."
@@ -39,6 +38,6 @@ module.exports.locationsReadOne = function (req, res) {
 			+ req.params.locationid + "\nvalue isn't found.");
 	}
 };
-	
+
 module.exports.locationsUpdateOne = function (req, res) {};
 module.exports.locationsDeleteOne = function (req, res) {};
