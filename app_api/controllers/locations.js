@@ -6,8 +6,47 @@ var sendJsonResponse = function (res, status, content) {
 	res.json(content);
 };
 
+var theEarth = (function(){
+	var earthRadius = 6371; //km
+	var getDistanceFromRads = function(rads) {
+		return parseFloat(rads * earthRadius);
+	};
+	var getRadsFromDistance = function(distance) {
+		return parseFloat(distance / earthRadius);
+	};
+	return {
+		getDistanceFromRads : getDistanceFromRads,
+		getRadsFromDistance : getRadsFromDistance
+	};
+})();
+
 module.exports.locationsListByDistance = function (req, res) {
-	sendJsonResponse(res, 200, {"status" : "success"});
+	var lng = parseFloat(req.query.lng);
+	var lat = parseFloat(req.query.lat);
+	var maxDistance = req.query.maxDistance;
+	var point = {
+		type: "Point",
+		coordinates: [lng, lat]
+	};
+	var geoOptions = {
+		spherical: true,
+		maxDistance: theEarth.getRadsFromDistance(maxDistance), // sets max distance: 20 km
+		num: 10
+	};
+	Loc.geoNear(point, geoOptions, function (err, results, stats) {
+		var locations = [];
+		results.forEach(function(doc) {
+			locations.push({
+				distance: theEarth.getDistanceFromRads(doc.dis),
+				name: doc.obj.name,
+				address: doc.obj.address,
+				rating: doc.obj.rating,
+				facilites: doc.obj.facilities,
+				_id: doc.obj._id
+			});
+		});
+		sendJsonResponse(res, 200, locations);
+	});
 };
 module.exports.locationsCreate = function (req, res) {
 };
