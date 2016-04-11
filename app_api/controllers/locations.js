@@ -30,6 +30,9 @@ module.exports.locationsListByDistance = function (req, res) {
 		type: "Point",
 		coordinates: [lng, lat]
 	};
+	console.log("lng: " + lng);
+	console.log("lat: " + lat);
+	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
 		maxDistance: theEarth.getRadsFromDistance(maxDistance), // sets max distance: 20 km
