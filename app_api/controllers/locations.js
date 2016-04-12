@@ -9,10 +9,10 @@ var sendJsonResponse = function (res, status, content) {
 var theEarth = (function(){
 	var earthRadius = 6371; //km
 
-	var getDistanceFromRads = function(rads) {
+	var getDistanceFromRads = function (rads) {
 		return parseFloat(rads * earthRadius);
 	};
-	var getRadsFromDistance = function(distance) {
+	var getRadsFromDistance = function (distance) {
 		return parseFloat(distance / earthRadius);
 	};
 	return {
@@ -35,8 +35,7 @@ module.exports.locationsListByDistance = function (req, res) {
 	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
-		maxDistance: theEarth.getRadsFromDistance(maxDistance), // sets max distance: 20 km
-		num: 10
+		maxDistance: theEarth.getRadsFromDistance(maxDistance),
 	};
 	if (!lng || !lat || !maxDistance) {
 		console.log('locationsListByDistance missing params');
@@ -75,6 +74,33 @@ var buildLocationList = function (req, res, results, stats) {
 };
 
 module.exports.locationsCreate = function (req, res) {
+	Loc.create({
+		name: req.body.name,
+		address: req.body.address,
+		facilities: req.body.facilities.split(","),
+		coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
+		// openingTimes array could be put into a loop checking for the
+		// existence of the values, instead of just adding days1, days2, etc.
+		openingTimes: [{
+			days: req.body.days1,
+			opening: req.body.opening1,
+			closing: req.body.closing1,
+			closed: req.body.closed1,
+		}, {
+			days: req.body.days2,
+			opening: req.body.opening2,
+			closing: req.body.closing2,
+			closed: req.body.closed2,
+		}]
+	}, function (err, location) {
+		if (err) {
+			console.log(err);
+			sendJsonResponse(res, 400, err);
+		} else {
+			console.log(location);
+			sendJsonResponse(res, 201, location);
+		}
+	});
 };
 
 module.exports.locationsReadOne = function (req, res) {
