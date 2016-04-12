@@ -31,7 +31,7 @@ module.exports.reviewsCreate = function (req, res) {
 				"message" : "locationid not found"
 			});
 		} else {
-			loc.reviews.push({
+			location.reviews.push({
 				author: req.body.author,
 				rating: req.body.rating,
 				content: req.body.content
