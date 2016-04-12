@@ -4,6 +4,37 @@ var sendJsonResponse = function (res, status, content) {
 	res.status(status);
 	res.json(content);
 };
+var updateAverageRating = function (locationid) {
+	Loc
+		.findById(locationid)
+		.select('rating reviews')
+		.exec(
+			function(err, location) {
+				if (!err) {
+					doSetAverageRating(location);
+				}
+			}
+		);
+};
+var doSetAverageRating = function (location) {
+	var reviewCount, ratingAverage, ratingTotal;
+	if (location.reviews && location.reviews.length > 0) {
+		reviewCount = location.reviews.length;
+		ratingTotal = 0;
+		for (var i = 0; i < reviewCount; i++) {
+			ratingTotal = ratingTotal + location.reviews[i].rating;
+		}
+		ratingAverage = parseInt(ratingTotal / reviewCount, 10);
+		location.rating = ratingAverage;
+		location.save(function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log("Average rating updated to " + ratingAverage);
+			}
+		});
+	}
+};
 
 module.exports.reviewsCreate = function (req, res) {
 	var locationid = req.params.locationid;
@@ -49,39 +80,7 @@ module.exports.reviewsCreate = function (req, res) {
 			});
 		}
 	};
-	var updateAverageRating = function (locationid) {
-		Loc
-			.findById(locationid)
-			.select('rating reviews')
-			.exec(
-				function(err, location) {
-					if (!err) {
-						doSetAverageRating(location);
-					}
-				}
-			);
-	};
-	var doSetAverageRating = function (location) {
-		var reviewCount, ratingAverage, ratingTotal;
-		if (location.reviews && location.reviews.length > 0) {
-			reviewCount = location.reviews.length;
-			ratingTotal = 0;
-			for (var i = 0; i < reviewCount; i++) {
-				ratingTotal = ratingTotal + location.reviews[i].rating;
-			}
-			ratingAverage = parseInt(ratingTotal / reviewCount, 10);
-			location.rating = ratingAverage;
-			location.save(function (err) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log("Average rating updated to " + ratingAverage);
-				}
-			});
-		}
-	};
 };
-
 
 module.exports.reviewsReadOne = function (req, res) {
 	if (req.params && req.params.locationid && req.params.reviewid) {
@@ -188,4 +187,48 @@ module.exports.reviewsUpdateOne = function (req, res) {
 			}
 		);
 };
-module.exports.reviewsDeleteOne = function (req, res) {};
+module.exports.reviewsDeleteOne = function (req, res) {
+	if (!req.params.locationid || !req.params.reviewid) {
+		sendJsonResponse(res, 404, {
+			"message" : "Not found, locationid and reviewid are required"
+		});
+		return;
+	}
+	Loc
+		.findById(locationid)
+		.select('reviews')
+		.exec(
+			function(err, location) {
+				if (!location) {
+					sendJsonResponse(res, 404, {
+						"message" : "locationid not found"
+					});
+					return;
+				} else if (err) {
+					sendJsonResponse(res, 400, err);
+					return;
+				}
+				if (location.reviews && location.reviews.length > 0) {
+					if (!location.reviews.id(req.params.reviewid)) {
+						sendJsonResponse(res, 404, {
+							"message" : "reviewid not found"
+						});
+					} else {
+						location.reviews.id(req.params.reviewid).remove();
+						location.save(function (err) {
+							if (err) {
+								sendJsonResponse(res, 404, err);
+							} else {
+								updateAverageRating(location._id);
+								sendJsonResponse(res, 204, null);
+							}
+						});
+					}
+				} else {
+					sendJsonResponse(res, 404, {
+						"message" : "No review to delete!"
+					});
+				}
+			}
+		);
+};
