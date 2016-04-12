@@ -15,6 +15,7 @@ module.exports.reviewsCreate = function (req, res) {
 				function(err, location) {
 					if (err) {
 						sendJsonResponse(res, 404, err);
+						return;
 					} else {
 						doAddReview(req, res, location);
 					}
