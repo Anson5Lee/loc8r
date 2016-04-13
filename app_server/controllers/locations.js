@@ -3,13 +3,12 @@ var apiOptions = {
 	server : "http://localhost:3000"
 };
 if (process.env.NODE_ENV === 'production') {
-	apiOptions.server = "http://agile-castle-43355.herokuapp.com/"
+	apiOptions.server = "https://agile-plains-60437.herokuapp.com/"
 }
-// GET Home page
-module.exports.homelist = function(req, res) {
 
-/*	The second parameter is a data object being sent
-	to the view (the locations-list.jade file).		*/
+var renderHomepage = function (req, res, responseBody) {
+	/*	The second parameter is a data object being sent
+		to the view (the locations-list.jade file).		*/
 	res.render('locations-list', {
 		title: 'Loc8r - find a place to work with wifi',
 		pageHeader: {
@@ -17,33 +16,14 @@ module.exports.homelist = function(req, res) {
 			strapline: "Find places to work with wifi near you!"
 		},
 		sidebar:
-			"Looking for wifi and a seat? Loc8r helps you "
+			  "Looking for wifi and a seat? Loc8r helps you "
 		  + "find places to work when out and about. Perhaps with "
 		  + "coffee, cake or a pint? Let Loc8r help you find the "
 		  + "place you're looking for.",
-		locations: [{
-			name: 'Starcups',
-			address: '125 High Street, Reading, RG6 1PS',
-			rating: 3,
-			facilities: ['Hot Drinks', 'Food', 'Premium Wifi'],
-			distance: '100m'
-		},{
-			name: 'Cafe Hero',
-			address: '125 High Street, Reading, RG6 1PS',
-			rating: 4,
-			facilities: ['Hot Drinks', 'Food', 'Premium Wifi'],
-			distance: '220m'
-		},{
-			name: 'Burger Queen',
-			address: '125 High Street, Reading, RG6 1PS',
-			rating: 2,
-			facilities: ['Hot Drinks', 'Food'],
-			distance: '350m'
-		}]
-
+		locations: responseBody
 	});
 };
-// GET Location Info page
+	// GET Location Info page
 module.exports.locationInfo = function(req, res) {
 	res.render('location-info', {
 		title: 'Starcups Info',
@@ -91,6 +71,30 @@ module.exports.locationInfo = function(req, res) {
 
 
 	});
+};
+// GET Home page
+module.exports.homelist = function(req, res) {
+	var requestOptions, path;
+	path = '/api/locations';
+	requestOptions = {
+		url : apiOptions.server + path,
+		method : "GET",
+		json : {},
+		qs : {
+			lng : -86.164128,
+			lat : 40.021598,
+			maxDistance : 20
+		}
+	};
+	request(
+		requestOptions,
+		function(err, response, body) {
+			if (err) {
+				console.log("Error: " + err);
+			}
+			renderHomepage(req, res, body);
+		}
+	);
 };
 
 // GET Add Review page
