@@ -50,26 +50,25 @@ module.exports.locationInfo = function(req, res) {
 			author: 'Simon Holmes',
 			rating: 5,
 			createdOn: '16 July 2013',
-			content: "What a great place. I can't say "
-				   + "enough good things about it."
+			content:
+				"What a great place. I can't say "
+			+ "enough good things about it."
 		},{
 			author: "Charlie Chaplin",
 			rating: 3,
 			createdOn: "16 June 2013",
 			content:
 				"it was okay.. coffee wasn't great, "
-			  + "but the wifi was fast."
+			+ "but the wifi was fast."
 		}],
 		description:
 			"Simon's cafe is on Loc8r because it has "
-		  + "accessible wifi and space to sit down "
-		  + "with your laptop and get some work done.",
+		+ "accessible wifi and space to sit down "
+		+ "with your laptop and get some work done.",
 		endNote:
 			"If you've been here and you like it--or "
-		  + "if you don't-- please leave a review to "
-		  + "help other people just like you."
-
-
+		+ "if you don't-- please leave a review to "
+		+ "help other people just like you."
 	});
 };
 // GET Home page
@@ -81,8 +80,8 @@ module.exports.homelist = function(req, res) {
 		method : "GET",
 		json : {},
 		qs : {
-			lng : -86.164128,
-			lat : 40.021598,
+			lng : -86.15674960000001,
+			lat : 40.0406897,
 			maxDistance : 20
 		}
 	};
@@ -92,9 +91,26 @@ module.exports.homelist = function(req, res) {
 			if (err) {
 				console.log("Error: " + err);
 			}
-			renderHomepage(req, res, body);
+			var i, data;
+			data = body;
+			for (i = 0; i < data.length; i++) {
+				data[i].distance = _formatDistance(data[i].distance);
+			}
+			renderHomepage(req, res, data);
 		}
 	);
+
+	var _formatDistance = function (distance) {
+		var numDistance, unit;
+		if (distance > 1) {
+			numDistance = parseFloat(distance).toFixed(1);
+			unit = 'km';
+		} else {
+			numDistance = parseInt(distance * 1000, 10);
+			unit = 'm';
+		}
+		return numDistance + ' ' + unit;
+	};
 };
 
 // GET Add Review page

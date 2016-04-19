@@ -35,7 +35,7 @@ module.exports.locationsListByDistance = function (req, res) {
 	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
-		maxDistance: theEarth.getRadsFromDistance(maxDistance),
+		maxDistance: (maxDistance * 1000), // convert to METERS, not radians
 		num: 10
 	};
 	if ((!lng && lng!==0) || (!lat && lat!==0) || !maxDistance) {
@@ -45,32 +45,38 @@ module.exports.locationsListByDistance = function (req, res) {
 		});
 		return;
 	}
-	Loc.geoNear(point, geoOptions, function(err, results, stats) {
+	Loc.geoNear(point, geoOptions, function (err, results, stats) {
 		var locations;
 		console.log('Geo Results', results);
 		console.log('Geo Stats', stats);
+		console.log('geoOptions.maxDistance (should be 20000 meters): '
+							+ geoOptions.maxDistance);
 		if (err) {
 			console.log('geoNear error:', err);
 			sendJsonResponse(res, 404, err);
 		} else {
 			locations = buildLocationList(req, res, results, stats);
 			sendJsonResponse(res, 200, locations);
-			console.log("All went well");
+			console.log("results: " + results);
 		}
 	});
 };
 
 var buildLocationList = function (req, res, results, stats) {
 	var locations = [];
-	results.forEach(function(doc) {
+	results.forEach(function (doc) {
 		locations.push({
-			distance: theEarth.getDistanceFromRads(doc.dis),
+			// "geoNear() no longer enforces legacy coordinate pairs - supports GeoJSON"
+			// https://github.com/Automattic/mongoose/blob/master/History.md#395--2014-11-10
+			distance: (doc.dis / 1000),  // (read above) distance is a simple m -> km conversion.
 			name: doc.obj.name,
 			address: doc.obj.address,
 			rating: doc.obj.rating,
 			facilities: doc.obj.facilities,
 			_id: doc.obj._id
 		});
+		console.log("doc.dis: " + doc.dis);
+		console.log("getDistanceFromRads: " + theEarth.getDistanceFromRads(doc.dis));
 	});
 	return locations;
 };
