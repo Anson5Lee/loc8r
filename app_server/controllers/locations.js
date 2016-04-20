@@ -101,15 +101,19 @@ module.exports.homelist = function(req, res) {
 	);
 
 	var _formatDistance = function (distance) {
-		var numDistance, unit;
-		if (distance > 1) {
-			numDistance = parseFloat(distance).toFixed(1);
-			unit = 'km';
+		if ( distance && !isNaN(parseFloat(distance) && isFinite(distance)) ) {
+			var numDistance, unit;
+			if (distance > 1) {
+				numDistance = parseFloat(distance).toFixed(1);
+				unit = 'km';
+			} else {
+				numDistance = parseInt(distance * 1000, 10);
+				unit = 'm';
+			}
+			return numDistance + ' ' + unit;
 		} else {
-			numDistance = parseInt(distance * 1000, 10);
-			unit = 'm';
+			return "NaN";
 		}
-		return numDistance + ' ' + unit;
 	};
 };
 

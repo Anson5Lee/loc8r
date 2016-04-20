@@ -6,20 +6,22 @@ var sendJsonResponse = function (res, status, content) {
 	res.json(content);
 };
 
-var theEarth = (function(){
-	var earthRadius = 6371; //km
-
-	var getDistanceFromRads = function (rads) {
-		return parseFloat(rads * earthRadius);
-	};
-	var getRadsFromDistance = function (distance) {
-		return parseFloat(distance / earthRadius);
-	};
-	return {
-		getDistanceFromRads : getDistanceFromRads,
-		getRadsFromDistance : getRadsFromDistance
-	};
-})();
+// No need for this function when using GeoJSON
+//-------------------------------------------------
+// var theEarth = (function(){
+// 	var earthRadius = 6371; //km
+//
+// 	var getDistanceFromRads = function (rads) {
+// 		return parseFloat(rads * earthRadius);
+// 	};
+// 	var getRadsFromDistance = function (distance) {
+// 		return parseFloat(distance / earthRadius);
+// 	};
+// 	return {
+// 		getDistanceFromRads : getDistanceFromRads,
+// 		getRadsFromDistance : getRadsFromDistance
+// 	};
+// })();
 
 /* GET list of locations */
 module.exports.locationsListByDistance = function (req, res) {
@@ -28,14 +30,15 @@ module.exports.locationsListByDistance = function (req, res) {
 	var maxDistance = parseFloat(req.query.maxDistance);
 	var point = {
 		type: "Point",
-		coordinates: [lng, lat]
+		coordinates: [lng, lat],
+		distanceMultiplier: 0.001
 	};
 	console.log("lng: " + lng);
 	console.log("lat: " + lat);
 	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
-		maxDistance: (maxDistance * 1000), // convert to METERS, not radians
+		maxDistance: (maxDistance * 1000), // convert to meters, not radians
 		num: 10
 	};
 	if ((!lng && lng!==0) || (!lat && lat!==0) || !maxDistance) {
@@ -55,28 +58,27 @@ module.exports.locationsListByDistance = function (req, res) {
 			console.log('geoNear error:', err);
 			sendJsonResponse(res, 404, err);
 		} else {
-			locations = buildLocationList(req, res, results, stats);
+			// pass in `point` so that distanceMultiplier can be used.
+			locations = buildLocationList(req, res, results, stats, point);
 			sendJsonResponse(res, 200, locations);
 			console.log("results: " + results);
 		}
 	});
 };
 
-var buildLocationList = function (req, res, results, stats) {
+var buildLocationList = function (req, res, results, stats, point) {
 	var locations = [];
 	results.forEach(function (doc) {
 		locations.push({
 			// "geoNear() no longer enforces legacy coordinate pairs - supports GeoJSON"
 			// https://github.com/Automattic/mongoose/blob/master/History.md#395--2014-11-10
-			distance: (doc.dis / 1000),  // (read above) distance is a simple m -> km conversion.
+			distance: (doc.dis * point.distanceMultiplier),  // (read above) distance is a simple m -> km conversion.
 			name: doc.obj.name,
 			address: doc.obj.address,
 			rating: doc.obj.rating,
 			facilities: doc.obj.facilities,
 			_id: doc.obj._id
 		});
-		console.log("doc.dis: " + doc.dis);
-		console.log("getDistanceFromRads: " + theEarth.getDistanceFromRads(doc.dis));
 	});
 	return locations;
 };
@@ -126,7 +128,6 @@ module.exports.locationsReadOne = function (req, res) {
 					return;
 				}
 				sendJsonResponse(res, 200, location);
-				console.log("All seemingly went well!");
 			});
 	} else {
 		sendJsonResponse(res, 404, {

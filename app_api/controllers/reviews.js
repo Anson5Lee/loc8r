@@ -106,14 +106,6 @@ module.exports.reviewsReadOne = function (req, res) {
 						sendJsonResponse(res, 404, {
 							"message" : "reviewid not found"
 						});
-						console.log(
-							"\nThis error occurred the `if (!thisReview) {}` block.\n" +
-							"value of thisReview : " + thisReview + "\n" +
-							"value of location.reviews.id(req.params.reviewid); : " +
-							location.reviews.id(req.params.reviewid) + "\n" +
-							"value of req.params.reviewid : " +
-							req.params.reviewid
-						);
 					} else {
 						response = {
 							location: {
@@ -135,7 +127,7 @@ module.exports.reviewsReadOne = function (req, res) {
 			"message" : "Not found: locationid and reviewid are required"
 		});
 		console.log("Not found.\nparams object: " + req.params + "\n" +
-		"locationid: "	+ req.params.locationid + "\nvalue isn't found.");
+		"locationid: "	+ req.params.locationid + "\nvalue not found.");
 	}
 };
 module.exports.reviewsUpdateOne = function (req, res) {
