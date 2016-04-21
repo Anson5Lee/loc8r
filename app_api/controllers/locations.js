@@ -31,14 +31,15 @@ module.exports.locationsListByDistance = function (req, res) {
 	var point = {
 		type: "Point",
 		coordinates: [lng, lat],
-		distanceMultiplier: 0.001
+		// distanceMultiplier: 0.001     // kilometers
+		distanceMultiplier: 0.000621371  // miles
 	};
 	console.log("lng: " + lng);
 	console.log("lat: " + lat);
 	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
-		maxDistance: (maxDistance * 1000), // convert to meters, not radians
+		maxDistance: (maxDistance * 1609.34), // convert to meters, not radians
 		num: 10
 	};
 	if ((!lng && lng!==0) || (!lat && lat!==0) || !maxDistance) {
@@ -52,7 +53,7 @@ module.exports.locationsListByDistance = function (req, res) {
 		var locations;
 		console.log('Geo Results', results);
 		console.log('Geo Stats', stats);
-		console.log('geoOptions.maxDistance (should be 20000 meters): '
+		console.log('geoOptions.maxDistance (10 miles should be 16093.4 meters): '
 							+ geoOptions.maxDistance);
 		if (err) {
 			console.log('geoNear error:', err);
@@ -68,11 +69,12 @@ module.exports.locationsListByDistance = function (req, res) {
 
 var buildLocationList = function (req, res, results, stats, point) {
 	var locations = [];
+	var multiplier = point.distanceMultiplier;
 	results.forEach(function (doc) {
 		locations.push({
 			// "geoNear() no longer enforces legacy coordinate pairs - supports GeoJSON"
 			// https://github.com/Automattic/mongoose/blob/master/History.md#395--2014-11-10
-			distance: (doc.dis * point.distanceMultiplier),  // (read above) distance is a simple m -> km conversion.
+			distance: (doc.dis * multiplier),
 			name: doc.obj.name,
 			address: doc.obj.address,
 			rating: doc.obj.rating,
