@@ -16,14 +16,19 @@ block content
             .panel-heading
               h2.panel-title Opening hours
             .panel-body
-              each facility in facilities
+              each facility in location.facilities
                 span.label.label-warning= facility
                   | &nbsp;
                   span.glyphicon.glyphicon-ok
                 | &nbsp;
 
-              each line in openingTimes
-                p#times= line
+              each time in location.openingTimes
+                p#times
+                  | #{time.days} | 
+                  if time.closed
+                    | closed
+                  else
+                    | #{time.opening} - #{time.closing}
         .col-xs-12.col-sm-6.location-map
           .panel.panel-primary
             .panel-heading
@@ -38,7 +43,7 @@ block content
               h2.panel-title Customer reviews
 
             .panel-body.review-container
-              each review in reviews
+              each review in location.reviews
                 .row
                   .review
                     .well.well-sm.review-header
@@ -52,5 +57,3 @@ block content
     .col-xs-12.col-md-3
       p.lead= description
       p= endNote
-
-

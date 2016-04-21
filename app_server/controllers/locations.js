@@ -34,7 +34,7 @@ var renderHomepage = function (req, res, responseBody) {
 var renderDetailPage = function (req, res, locDetail) {
 	res.render('location-info', {
 		title: locDetail.name,
-		pageHeader: {title: locDetail.name}
+		pageHeader: {title: locDetail.name},
 		sidebar: {
 			context:
 				"is on Loc8r because it has "
@@ -65,6 +65,7 @@ module.exports.locationInfo = function(req, res) {
 				lng : body.coords[0],
 				lat : body.coords[1]
 			};
+			console.log(body);
 			renderDetailPage(req, res, data);
 		}
 	);
