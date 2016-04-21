@@ -39,7 +39,7 @@ module.exports.locationsListByDistance = function (req, res) {
 	console.log("maxDistance: " + maxDistance);
 	var geoOptions = {
 		spherical: true,
-		maxDistance: (maxDistance * 1609.34), // convert to meters, not radians
+		maxDistance: (maxDistance * 1609.34), // change to miles
 		num: 10
 	};
 	if ((!lng && lng!==0) || (!lat && lat!==0) || !maxDistance) {
