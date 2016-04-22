@@ -34,12 +34,13 @@ block content
             .panel-heading
               h2.panel-title Location map
             .panel-body
-              img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center=#{location.coords.lat},#{location.coords.lng}&zoom=17&size=400x350&sensor=false&markers=#{location.coords.lat},#{location.coords.lng}&scale=2')
+              img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center=#{location.coords.lat},#{location.coords.lng}&zoom=16&size=400x350&sensor=false&markers=#{location.coords.lat},#{location.coords.lng}&scale=2')
       .row
         .col-xs-12
           .panel.panel-primary.review-panel
             .panel-heading
-              a.btn.btn-default.pull-right(href=addReviewURL) Add review
+              a.btn.btn-default.pull-right(href="/location/#{location._id}/reviews/new")
+                | Add Review
               h2.panel-title Customer reviews
 
             .panel-body.review-container
@@ -50,10 +51,11 @@ block content
                       span.rating
                         +outputRating(review.rating)
                       span.reviewAuthor= review.author
-                      small.reviewTimestamp= review.createdOn
+                      small.reviewTimestamp
+                        +formatDate(review.timestamp)
                     .col-xs-12
                       p= review.content
 
     .col-xs-12.col-md-3
-      p.lead= description
-      p= endNote
+      p.lead #{title} #{sidebar.context}
+      p #{sidebar.callToAction}

@@ -8,9 +8,8 @@ var openingTimeSchema = new mongoose.Schema({
 var reviewSchema = new mongoose.Schema({
 	author: {type: String, required: true},
 	rating: {type: Number, required: true, min: 0, max: 5},
-	content: String,
+	content: {type: String, required: true},
 	timestamp: {type: Date, "default": Date.now}
-
 });
 var locationSchema = new mongoose.Schema({
 	name: {type: String, required: true},

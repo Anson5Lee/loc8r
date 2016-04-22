@@ -9,7 +9,7 @@ var updateAverageRating = function (locationid) {
 		.findById(locationid)
 		.select('rating reviews')
 		.exec(
-			function(err, location) {
+			function (err, location) {
 				if (!err) {
 					doSetAverageRating(location);
 				}
@@ -43,7 +43,7 @@ module.exports.reviewsCreate = function (req, res) {
 			.findById(locationid)
 			.select('reviews')
 			.exec(
-				function(err, location) {
+				function (err, location) {
 					if (err) {
 						sendJsonResponse(res, 404, err);
 						return;
@@ -71,6 +71,7 @@ module.exports.reviewsCreate = function (req, res) {
 			location.save(function (err, location) {
 				var thisReview;
 				if (err) {
+					console.log(err);
 					sendJsonResponse(res, 400, err);
 				} else {
 					updateAverageRating(location._id);

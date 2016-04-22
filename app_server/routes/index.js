@@ -6,9 +6,14 @@ var ctrlOthers = require('../controllers/others');
 /* GET Locations pages. */
 router.get('/', ctrlLocations.homelist);
 router.get('/location/:locationid', ctrlLocations.locationInfo);
-router.get('/location/review/new', ctrlLocations.addReview);
 
-/* GET Other pages */
+/* GET Add Review Page */
+router.get('/location/:locationid/reviews/new', ctrlLocations.addReview);
+
+/* POST Review */
+router.post('/location/:locationid/reviews/new', ctrlLocations.doAddReview);
+
+/* GET Otherg page */
 router.get('/about', ctrlOthers.about);
 
 module.exports = router;
