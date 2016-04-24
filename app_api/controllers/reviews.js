@@ -94,11 +94,9 @@ module.exports.reviewsReadOne = function (req, res) {
 					sendJsonResponse(res, 404, {
 						"message" : "locationid not found"
 					});
-					console.log("The `if (!location) {}` block ran.");
 					return;
 				} else if (err) {
 					sendJsonResponse(res, 404, err);
-					console.log("The `else if (err) {}` block ran.");
 					return;
 				}
 				if (location.reviews && location.reviews.length > 0) {
