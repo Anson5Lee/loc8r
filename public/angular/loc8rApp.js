@@ -1,24 +1,17 @@
 angular.module('loc8rApp', []);
 
-var locationListCtrl = function ($scope) {
-  $scope.data = {
-    locations: [{
-      name: 'Starbucks',
-      address: '318 W 161st St, Westfield, IN 46074',
-      rating: 5,
-      facilities: [ 'Hot Drinks', 'Food', 'Premium Wifi', 'Chess' ],
-      distance: '0.522115 miles',
-      _id: '570c1dc6dbe80bcd6ba2630e'
-    },{
-      name: 'Panera Bread',
-      address: '2001 E Greyhound Pass #4E, Carmel, IN 46033',
-      rating: 4,
-      facilities: [ 'Hot Drinks', 'Food', 'Premium Wifi' ],
-      distance: '2.5632 miles',
-      _id: '57022276c944227d05dc95de'
-    }]
-  };
+var locationListCtrl = function ($scope, loc8rData) {
+  $scope.message = "Searching for nearby places...";
+  loc8rData
+    .success(function (data) {
+      $scope.message = data.length > 0 ? "" : "No locations found.";
+      $scope.data = { locations: data };
+  }).error(function (e) {
+      $scope.message = "Sorry, something went wrong.";
+      console.log(e);
+  });
 };
+
 
 // var _isNumeric = function (n) {
 //   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -50,8 +43,13 @@ var ratingStars = function () {
   };
 };
 
+var loc8rData = function ($http) {
+  return $http.get('/api/locations?lng=-86.14141&lat=40.04334&maxDistance=20');
+};
+
 angular
   .module('loc8rApp')
   .controller('locationListCtrl', locationListCtrl)
   .filter('formatDistance', formatDistance)
-  .directive('ratingStars', ratingStars);
+  .directive('ratingStars', ratingStars)
+  .service('loc8rData', loc8rData);
