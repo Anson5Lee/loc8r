@@ -21,5 +21,9 @@
     "request": "^2.70.0",
     "serve-favicon": "^2.3.0",
     "yargs": "^4.7.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7"
   }
 }
